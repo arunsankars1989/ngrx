@@ -1,0 +1,46 @@
+{
+  "project": {
+    "title": "ngrx"
+  },
+  "forms": {
+    "addPost": "Add Post",
+    "updatePost": "Update Post",
+    "login": "Login",
+    "titleLabel": "Title",
+    "descriptionLabel": "Description",
+    "emailLabel": "Email",
+    "passwordLabel": "Password"
+  },
+  "formErrors": {
+    "titleReq": "Title is required",
+    "titleMinLen": "Title should be of minimum {{titleLen}} characters length",
+    "descriptionReq": "Description is required",
+    "descriptionMinLen": "Description should be of minimum {{descLen}} characters length",
+    "emailReq": "Email is required",
+    "emailValidate": "Please enter valid email",
+    "passwordReq": "Password is required"
+  },
+  "buttons": {
+    "addPost": "Add Post",
+    "updatePost": "Update Post",
+    "update": "Update",
+    "delete": "Delete",
+    "login": "Login"
+  },
+  "table": {
+    "id": "Id",
+    "title": "Title",
+    "description": "Description",
+    "actions": "Actions"
+  },
+  "navBar": {
+    "home": "Home",
+    "counter": "Counter",
+    "posts": "Posts",
+    "login": "Login",
+    "signup": "Signup"
+  },
+  "posts": {
+    "title": "Posts List"
+  }
+}
