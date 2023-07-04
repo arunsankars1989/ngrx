@@ -9,7 +9,6 @@ import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { appReducer } from './state/app.state';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
@@ -21,7 +20,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot(appReducer),
+    StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production // Restrict extension to log-only mode
       // autoPause: true, // Pauses recording actions and state changes when the extension window is not open
