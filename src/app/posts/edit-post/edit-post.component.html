@@ -1,24 +1,24 @@
 <div class="row">
   <div class="col-md-12">
-    <h3>Update Post</h3>
+    <h3>{{ 'forms.updatePost' | translate }}</h3>
     <hr/>
     <form (ngSubmit)="onSubmit()" [formGroup]="postForm">
       <div class="mb-3">
-        <label for="">Title</label>
+        <label for="">{{ 'forms.titleLabel' | translate }}</label>
         <input class="form-control" formControlName="title" type="text">
         <div>
           {{ showTitleErrors() }}
         </div>
       </div>
       <div class="mb-3">
-        <label for="">Description</label>
+        <label for="">{{ 'forms.descriptionLabel' | translate }}</label>
         <textarea class="form-control" cols="30" formControlName="description" id="" name="" rows="5"></textarea>
         <div>
           {{ showDescriptionErrors() }}
         </div>
       </div>
       <div class="my-3">
-        <button class="btn btn-primary" type="submit">Update Post</button>
+        <button class="btn btn-primary" type="submit">{{ 'buttons.updatePost' | translate }}</button>
       </div>
     </form>
   </div>

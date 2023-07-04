@@ -7,6 +7,7 @@ import { Post } from '../../models/posts.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { updatePost } from '../state/posts.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-post',
@@ -23,7 +24,8 @@ export class EditPostComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private store: Store<AppState>,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
   }
 
@@ -40,26 +42,44 @@ export class EditPostComponent implements OnInit, OnDestroy {
   }
 
   showTitleErrors(): string | null {
+    let titleReq = '';
+    let titleMinLen = '';
+    this.translate.get(
+      [ 'formErrors.titleReq', 'formErrors.titleMinLen' ],
+      { titleLen: 6 }
+    ).subscribe(translations => {
+      titleReq = translations['formErrors.titleReq'];
+      titleMinLen = translations['formErrors.titleMinLen'];
+    });
     const titleForm = this.postForm.get('title');
     if (titleForm?.touched && !titleForm.valid) {
       if (titleForm?.errors?.['required']) {
-        return 'Title is required';
+        return titleReq;
       }
       if (titleForm?.errors?.['minlength']) {
-        return 'Title should be of minimum 6 characters length';
+        return titleMinLen;
       }
     }
     return null;
   }
 
   showDescriptionErrors(): string | null {
+    let descReq = '';
+    let descMinLen = '';
+    this.translate.get(
+      [ 'formErrors.descriptionReq', 'formErrors.descriptionMinLen' ],
+      { descLen: 10 }
+    ).subscribe(translations => {
+      descReq = translations['formErrors.descriptionReq'];
+      descMinLen = translations['formErrors.descriptionMinLen'];
+    });
     const descriptionForm = this.postForm.get('description');
     if (descriptionForm?.touched && !descriptionForm.valid) {
       if (descriptionForm?.errors?.['required']) {
-        return 'Description is required';
+        return descReq;
       }
       if (descriptionForm?.errors?.['minlength']) {
-        return 'Description should be of minimum 10 characters length';
+        return descMinLen;
       }
     }
     return null;

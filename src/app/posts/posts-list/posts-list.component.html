@@ -1,14 +1,14 @@
 <div class="row my-4">
   <div class="col-md-8">
-    <h3>Posts List</h3>
-    <div><a [routerLink]="['/posts/add']" class="btn btn-primary" href="#">Add Post</a></div>
+    <h3>{{ 'posts.title' | translate }}</h3>
+    <div><a [routerLink]="['/posts/add']" class="btn btn-primary" href="#">{{ 'buttons.addPost' | translate }}</a></div>
     <table *ngIf="posts | async as postsData" class="table table-striped">
       <thead>
       <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Actions</th>
+        <th>{{ 'table.id' | translate }}</th>
+        <th>{{ 'table.title' | translate }}</th>
+        <th>{{ 'table.description' | translate }}</th>
+        <th>{{ 'table.actions' | translate }}</th>
       </tr>
       </thead>
       <tbody>
@@ -17,8 +17,8 @@
         <td>{{ post.title }}</td>
         <td>{{ post.description }}</td>
         <td>
-          <a [routerLink]="['edit', post.id]" class="btn btn-primary" href="#">Update</a>&nbsp;
-          <button (click)="onDeletePost(post.id)" class="btn btn-danger">Delete</button>
+          <a [routerLink]="['edit', post.id]" class="btn btn-primary" href="#">{{ 'buttons.update' | translate }}</a>&nbsp;
+          <button (click)="onDeletePost(post.id)" class="btn btn-danger">{{ 'buttons.delete' | translate }}</button>
         </td>
       </tr>
       </tbody>
