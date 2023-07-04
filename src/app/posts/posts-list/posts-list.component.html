@@ -1,1 +1,25 @@
-<p>posts-list works!</p>
+<div class="row my-4">
+  <div class="col-md-8">
+    <h3>Posts List</h3>
+    <div><a [routerLink]="['/posts/add']" class="btn btn-primary" href="#">Add Post</a></div>
+    <table *ngIf="posts | async as postsData" class="table table-striped">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let post of postsData">
+        <td>{{ post.id }}</td>
+        <td>{{ post.title }}</td>
+        <td>{{ post.description }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-4">
+    <router-outlet></router-outlet>
+  </div>
+</div>
