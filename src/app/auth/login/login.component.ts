@@ -10,7 +10,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup = new FormGroup({});
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loginForm = new FormGroup({
       email: new FormControl(null, [
         Validators.required,
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  showEmailErrors() {
+  showEmailErrors(): string | null {
     const emailElement = this.loginForm.get('email');
     if (emailElement?.touched && !emailElement.valid) {
       if (emailElement.errors?.['required']) {
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
     return null;
   }
 
-  showPasswordErrors() {
+  showPasswordErrors(): string | null {
     const passwordElement = this.loginForm.get('password');
     if (passwordElement?.touched && !passwordElement.valid) {
       if (passwordElement.errors?.['required']) {
@@ -43,6 +43,10 @@ export class LoginComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  onLoginSubmit() {
+    console.log(this.loginForm.value);
   }
 
 }
