@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { loginStart, loginSuccess } from './auth.actions';
 import { map, mergeMap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { AuthResponseData } from '../../models/authResponseData.model';
 
 @Injectable()
 export class AuthEffects {
@@ -12,8 +13,9 @@ export class AuthEffects {
       ofType(loginStart),
       mergeMap((action) => {
         return this.authService.login(action.email, action.password)
-          .pipe(map(() => {
-            return loginSuccess();
+          .pipe(map((data: AuthResponseData) => {
+            const user = this.authService.formatUser(data);
+            return loginSuccess({ user });
           }));
       })
     );
