@@ -38,7 +38,8 @@
     "counter": "Counter",
     "posts": "Posts",
     "login": "Login",
-    "signup": "Signup"
+    "signup": "Signup",
+    "logout": "Logout"
   },
   "posts": {
     "title": "Posts List"

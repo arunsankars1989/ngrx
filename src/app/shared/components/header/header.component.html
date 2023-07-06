@@ -17,11 +17,14 @@
         <li class="nav-item">
           <a [routerLink]="['/posts']" class="nav-link" href="#">{{ 'navBar.posts' | translate }}</a>
         </li>
-        <li class="nav-item">
+        <li *ngIf="!(isAuthenticated | async)" class="nav-item">
           <a [routerLink]="['/auth']" class="nav-link" href="#">{{ 'navBar.login' | translate }}</a>
         </li>
-        <li class="nav-item">
+        <li *ngIf="!(isAuthenticated | async)" class="nav-item">
           <a [routerLink]="['/auth/signup']" class="nav-link" href="#">{{ 'navBar.signup' | translate }}</a>
+        </li>
+        <li *ngIf="isAuthenticated | async" class="nav-item">
+          <a [routerLink]="['/auth']" class="nav-link" href="#">{{ 'navBar.logout' | translate }}</a>
         </li>
       </ul>
     </div>
