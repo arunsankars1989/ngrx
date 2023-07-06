@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
-import { getLoading } from './store/shared/shared.selector';
+import { getErrorMesssage, getLoading } from './store/shared/shared.selector';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
 
   title = 'ngrx';
   showLoading: Observable<boolean> = of();
+  errorMessage: Observable<string> = of();
 
   constructor(
     private translate: TranslateService,
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.showLoading = this.store.select(getLoading);
+    this.errorMessage = this.store.select(getErrorMesssage);
   }
 
 }
