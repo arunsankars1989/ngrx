@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../state/app.state';
+import { loginStart } from '../state/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +13,10 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup = new FormGroup({});
 
-  ngOnInit() {
+  constructor(private store: Store<AppState>) {
+  }
+
+  ngOnInit(): void {
     this.loginForm = new FormGroup({
       email: new FormControl(null, [
         Validators.required,
@@ -22,7 +28,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  showEmailErrors() {
+  showEmailErrors(): string | null {
     const emailElement = this.loginForm.get('email');
     if (emailElement?.touched && !emailElement.valid) {
       if (emailElement.errors?.['required']) {
@@ -35,7 +41,7 @@ export class LoginComponent implements OnInit {
     return null;
   }
 
-  showPasswordErrors() {
+  showPasswordErrors(): string | null {
     const passwordElement = this.loginForm.get('password');
     if (passwordElement?.touched && !passwordElement.valid) {
       if (passwordElement.errors?.['required']) {
@@ -43,6 +49,12 @@ export class LoginComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  onLoginSubmit() {
+    const email = this.loginForm.value.email;
+    const password = this.loginForm.value.password;
+    this.store.dispatch(loginStart({ email, password }));
   }
 
 }

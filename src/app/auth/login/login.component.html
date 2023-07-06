@@ -2,7 +2,7 @@
   <div class="col-md-6 offset-md-3">
     <h3>{{ 'forms.login' | translate }}</h3>
     <hr>
-    <form [formGroup]="loginForm">
+    <form (ngSubmit)="onLoginSubmit()" [formGroup]="loginForm">
       <div class="mb-3">
         <label>{{ 'forms.emailLabel' | translate }}</label>
         <input class="form-control" formControlName="email" type="text"></div>
