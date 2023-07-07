@@ -33,10 +33,19 @@ export class PostsService {
     );
   }
 
-  updatePost(post: Post): Observable<{ name: string }> {
-    return this.http.put<{ name: string }>(
+  updatePost(post: Post) {
+    const postData = {
+      [post.id?.toString() || '']: { title: post.title, description: post.description }
+    };
+    return this.http.patch<{ name: string }>(
       'https://ngrxtest-c171a-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
-      post
+      postData
+    );
+  }
+
+  deletePost(id: string) {
+    return this.http.delete(
+      `https://ngrxtest-c171a-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${id}.json`
     );
   }
 
