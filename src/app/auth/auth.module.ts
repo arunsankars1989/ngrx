@@ -7,7 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthEffects } from './state/auth.effects';
 import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
@@ -21,7 +20,7 @@ import { SignupComponent } from './signup/signup.component';
     ReactiveFormsModule,
     TranslateModule,
     HttpClientModule,
-    EffectsModule.forFeature([ AuthEffects ])
+    EffectsModule.forFeature()
   ],
   exports: []
 })

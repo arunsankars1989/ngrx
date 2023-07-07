@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { loginStart, loginSuccess, signupStart, signupSuccess } from './auth.actions';
+import { autoLogin, loginStart, loginSuccess, signupStart, signupSuccess } from './auth.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { AuthResponseData } from '../../models/authResponseData.model';
@@ -21,9 +21,10 @@ export class AuthEffects {
         return this.authService.login(action.email, action.password)
           .pipe(
             map((data: AuthResponseData) => {
-              const user = this.authService.formatUser(data);
+              const user: User = this.authService.formatUser(data);
               this.store.dispatch(setLoadingSpinner({ status: false }));
               this.store.dispatch(setErrorMessage({ message: '' }));
+              this.authService.setUserInLocalStorage(user);
               return loginSuccess({ user });
             }),
             catchError((errResp) => {
@@ -56,6 +57,7 @@ export class AuthEffects {
               const user: User = this.authService.formatUser(data);
               this.store.dispatch(setLoadingSpinner({ status: false }));
               this.store.dispatch(setErrorMessage({ message: '' }));
+              this.authService.setUserInLocalStorage(user);
               return signupSuccess({ user });
             }),
             catchError((errResp) => {
@@ -67,6 +69,16 @@ export class AuthEffects {
       })
     );
   });
+
+  autoLogin$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(autoLogin),
+      map((action) => {
+        const user = this.authService.getUserFromLocalStorage();
+        console.log(user);
+      })
+    );
+  }, { dispatch: false });
 
   constructor(
     private actions$: Actions,

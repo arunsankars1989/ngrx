@@ -10,6 +10,9 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  timeoutInterval: any;
+
   constructor(private http: HttpClient) {
   }
 
@@ -32,7 +35,7 @@ export class AuthService {
     return new User(data.email, data.idToken, data.localId, expirationDate);
   }
 
-  getErrorMessage(message: string) {
+  getErrorMessage(message: string): string {
     switch (message) {
     case 'EMAIL_NOT_FOUND':
     case 'INVALID_PASSWORD':
@@ -46,6 +49,34 @@ export class AuthService {
     default:
       return 'Unknown error occurred. Please try again';
     }
+  }
+
+  setUserInLocalStorage(user: User): void {
+    localStorage.setItem('userData', JSON.stringify(user));
+
+    this.runTimeoutInterval(user);
+  }
+
+  runTimeoutInterval(user: User) {
+    const todaysDate = new Date().getTime();
+    const expirationDate = user.expireDate.getTime();
+    const timeInterval = expirationDate - todaysDate;
+
+    this.timeoutInterval = setTimeout(() => {
+      // logout/get refresh token
+    }, timeInterval);
+  }
+
+  getUserFromLocalStorage(): User | null {
+    const userDataString = localStorage.getItem('userData');
+    if (userDataString) {
+      const userData = JSON.parse(userDataString);
+      const expirationDate = new Date(userData.expirationDate);
+      const user: User = new User(userData.email, userData.token, userData.localId, expirationDate);
+      this.runTimeoutInterval(user);
+      return user;
+    }
+    return null;
   }
 
 }
