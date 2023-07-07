@@ -12,6 +12,9 @@
       </tr>
       </thead>
       <tbody>
+      <tr *ngIf="postsData.length === 0">
+        <td class="text-center" colspan="4">No posts available to show</td>
+      </tr>
       <tr *ngFor="let post of postsData">
         <td>{{ post.id }}</td>
         <td>{{ post.title }}</td>
