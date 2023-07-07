@@ -24,7 +24,8 @@
           <a [routerLink]="['/auth/signup']" class="nav-link" href="#">{{ 'navBar.signup' | translate }}</a>
         </li>
         <li *ngIf="isAuthenticated | async" class="nav-item">
-          <a [routerLink]="['/auth']" class="nav-link" href="#">{{ 'navBar.logout' | translate }}</a>
+          <a (click)="onLogout($event)" [routerLink]="['/auth']" class="nav-link"
+             href="#">{{ 'navBar.logout' | translate }}</a>
         </li>
       </ul>
     </div>

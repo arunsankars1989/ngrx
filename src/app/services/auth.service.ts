@@ -4,6 +4,9 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { AuthResponseData } from '../models/authResponseData.model';
 import { User } from '../models/user.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '../state/app.state';
+import { logout } from '../auth/state/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +16,10 @@ export class AuthService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   timeoutInterval: any;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private store: Store<AppState>
+  ) {
   }
 
   login(email: string, password: string): Observable<AuthResponseData> {
@@ -63,20 +69,28 @@ export class AuthService {
     const timeInterval = expirationDate - todaysDate;
 
     this.timeoutInterval = setTimeout(() => {
-      // logout/get refresh token
+      this.store.dispatch(logout());
     }, timeInterval);
   }
 
-  getUserFromLocalStorage(): User | null {
+  getUserFromLocalStorage(): User {
     const userDataString = localStorage.getItem('userData');
+    let user: User = {} as User;
     if (userDataString) {
       const userData = JSON.parse(userDataString);
       const expirationDate = new Date(userData.expirationDate);
-      const user: User = new User(userData.email, userData.token, userData.localId, expirationDate);
+      user = new User(userData.email, userData.token, userData.localId, expirationDate);
       this.runTimeoutInterval(user);
-      return user;
     }
-    return null;
+    return user;
+  }
+
+  logout() {
+    localStorage.removeItem('userData');
+    if (this.timeoutInterval) {
+      clearTimeout(this.timeoutInterval);
+      this.timeoutInterval = null;
+    }
   }
 
 }
