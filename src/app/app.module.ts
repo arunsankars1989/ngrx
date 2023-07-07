@@ -18,6 +18,7 @@ import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loa
 import { appReducer } from './state/app.state';
 import { AuthEffects } from './auth/state/auth.effects';
 import { AuthTokenInterceptor } from './services/authToken.interceptor';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -33,6 +34,10 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    HttpClientModule,
     EffectsModule.forRoot([ AuthEffects ]),
     StoreModule.forRoot(appReducer),
     StoreDevtoolsModule.instrument({
@@ -41,17 +46,14 @@ export function HttpLoaderFactory(http: HttpClient) {
       // trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
       // traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
     }),
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-    HttpClientModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [ HttpClient ]
       }
-    })
+    }),
+    StoreRouterConnectingModule.forRoot()
   ],
   providers: [
     HttpClient,
