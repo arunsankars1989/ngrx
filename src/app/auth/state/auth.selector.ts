@@ -11,7 +11,6 @@ export const isAuthenticated = createSelector(getAuthState, state => {
     return (Object.keys(state.user as User).length !== 0);
   }
   return false;
-
 });
 
 export const getToken = createSelector(getAuthState, state => {
