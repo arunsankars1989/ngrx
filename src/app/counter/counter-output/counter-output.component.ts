@@ -17,7 +17,6 @@ export class CounterOutputComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('change of counter');
     this.counter$ = this.store.select(getCounter);
   }
 

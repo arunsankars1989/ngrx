@@ -9,7 +9,8 @@
     "titleLabel": "Title",
     "descriptionLabel": "Description",
     "emailLabel": "Email",
-    "passwordLabel": "Password"
+    "passwordLabel": "Password",
+    "signup": "SignUp"
   },
   "formErrors": {
     "titleReq": "Title is required",
@@ -25,7 +26,8 @@
     "updatePost": "Update Post",
     "update": "Update",
     "delete": "Delete",
-    "login": "Login"
+    "login": "Login",
+    "signup": "SignUp"
   },
   "table": {
     "id": "Id",
@@ -38,7 +40,8 @@
     "counter": "Counter",
     "posts": "Posts",
     "login": "Login",
-    "signup": "Signup"
+    "signup": "Signup",
+    "logout": "Logout"
   },
   "posts": {
     "title": "Posts List"

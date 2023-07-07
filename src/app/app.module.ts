@@ -16,6 +16,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { EffectsModule } from '@ngrx/effects';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { appReducer } from './state/app.state';
+import { AuthEffects } from './auth/state/auth.effects';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -31,7 +32,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([ AuthEffects ]),
     StoreModule.forRoot(appReducer),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production // Restrict extension to log-only mode
@@ -52,6 +53,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     })
   ],
   providers: [ HttpClient ],
+  exports: [],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {
