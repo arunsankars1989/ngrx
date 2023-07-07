@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-6">
+      <div>
+        <h3>{{ 'forms.signup' | translate }}</h3>
+        <hr/>
+        <form (ngSubmit)="onSubmit()" [formGroup]="signUpForm">
+          <div class="mb-3">
+            <label>Email</label>
+            <input class="form-control" formControlName="email" type="email"/>
+            {{ showEmailErrors() }}
+          </div>
+          <div class="mb-3">
+            <label>Password</label>
+            <input class="form-control" formControlName="password" type="password"/>
+            {{ showPasswordErrors() }}
+          </div>
+          <div class="mb-3">
+            <button [disabled]="!signUpForm.valid" class="btn btn-primary"
+                    type="submit">{{ 'buttons.signup' | translate }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

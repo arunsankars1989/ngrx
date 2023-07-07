@@ -8,10 +8,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthEffects } from './state/auth.effects';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { AuthEffects } from './state/auth.effects';
     TranslateModule,
     HttpClientModule,
     EffectsModule.forFeature([ AuthEffects ])
-  ]
+  ],
+  exports: []
 })
 export class AuthModule {
 }
