@@ -13,3 +13,7 @@ export const isAuthenticated = createSelector(getAuthState, state => {
   return false;
 
 });
+
+export const getToken = createSelector(getAuthState, state => {
+  return state.user ? state.user.userToken : null;
+});

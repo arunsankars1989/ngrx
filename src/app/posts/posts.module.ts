@@ -9,6 +9,8 @@ import { StoreModule } from '@ngrx/store';
 import { postsReducer } from './state/posts.reducer';
 import { POST_STATE_NAME } from './state/posts.selector';
 import { TranslateModule } from '@ngx-translate/core';
+import { EffectsModule } from '@ngrx/effects';
+import { PostsEffects } from './state/posts.effects';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
     PostsRoutingModule,
     ReactiveFormsModule,
     StoreModule.forFeature(POST_STATE_NAME, postsReducer),
+    EffectsModule.forFeature([ PostsEffects ]),
     TranslateModule
   ]
 })
