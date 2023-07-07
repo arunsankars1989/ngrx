@@ -11,11 +11,13 @@ import {
   updatePost,
   updatePostSuccess
 } from './posts.actions';
-import { map, mergeMap, switchMap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 import { Post } from '../../models/posts.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../state/app.state';
-import { setLoadingSpinner } from '../../store/shared/shared.actions';
+import { setErrorMessage, setLoadingSpinner } from '../../store/shared/shared.actions';
+import { Router } from '@angular/router';
+import { GeneralService } from '../../services/general.service';
 
 @Injectable()
 export class PostsEffects {
@@ -56,10 +58,25 @@ export class PostsEffects {
         return this.postsService.updatePost(action.post)
           .pipe(map(() => {
             return updatePostSuccess({ post: action.post });
-          }));
+          }),
+          catchError((errResp) => {
+            const errorMessage: string = this.generalService.getErrorMessage(errResp.error.error.message);
+            this.store.dispatch(setLoadingSpinner({ status: false }));
+            return of(setErrorMessage({ message: errorMessage }));
+          })
+          );
       })
     );
   });
+
+  updatePostRedirect$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(updatePostSuccess),
+      map(() => {
+        this.router.navigate([ 'posts' ]).then();
+      })
+    );
+  }, { dispatch: false });
 
   deletePost$ = createEffect(() => {
     return this.actions$.pipe(
@@ -77,7 +94,9 @@ export class PostsEffects {
   constructor(
     private actions$: Actions,
     private postsService: PostsService,
-    private store: Store<AppState>
+    private generalService: GeneralService,
+    private store: Store<AppState>,
+    private router: Router
   ) {
   }
 

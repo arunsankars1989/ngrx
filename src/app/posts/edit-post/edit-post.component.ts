@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../state/app.state';
-import { getPostById } from '../state/posts.selector';
 import { Post } from '../../models/posts.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { updatePost } from '../state/posts.actions';
 import { TranslateService } from '@ngx-translate/core';
+import { getPostById } from '../state/posts.selector';
 
 @Component({
   selector: 'app-edit-post',
@@ -17,28 +16,29 @@ import { TranslateService } from '@ngx-translate/core';
 export class EditPostComponent implements OnInit, OnDestroy {
 
   // postForm: FormControl = new FormControl({});
-  post = {} as Post;
+  post: Post = {} as Post;
   postForm: FormGroup = new FormGroup({});
   postSubscription: Subscription = new Subscription();
 
   constructor(
-    private route: ActivatedRoute,
     private store: Store<AppState>,
-    private router: Router,
     private translate: TranslateService
   ) {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id') || '';
-      this.postSubscription = this.store
-        .select(getPostById(id))
-        .subscribe((data) => {
-          this.post = data as Post;
-          this.createForm();
-        });
-    });
+    this.createForm();
+    this.postSubscription = this.store
+      .select(getPostById)
+      .subscribe((post) => {
+        if (post) {
+          this.post = post as Post;
+          this.postForm.patchValue({
+            title: post?.title,
+            description: post?.description
+          });
+        }
+      });
   }
 
   showTitleErrors(): string | null {
@@ -87,11 +87,11 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
   createForm() {
     this.postForm = new FormGroup({
-      title: new FormControl(this.post.title, [
+      title: new FormControl(null, [
         Validators.required,
         Validators.minLength(6)
       ]),
-      description: new FormControl(this.post.description, [
+      description: new FormControl(null, [
         Validators.required,
         Validators.minLength(10)
       ])
@@ -112,7 +112,6 @@ export class EditPostComponent implements OnInit, OnDestroy {
     };
 
     this.store.dispatch(updatePost({ post }));
-    this.router.navigate([ 'posts' ]);
   }
 
   ngOnDestroy(): void {
