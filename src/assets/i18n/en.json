@@ -27,7 +27,8 @@
     "update": "Update",
     "delete": "Delete",
     "login": "Login",
-    "signup": "SignUp"
+    "signup": "SignUp",
+    "details:": "Details"
   },
   "table": {
     "id": "Id",

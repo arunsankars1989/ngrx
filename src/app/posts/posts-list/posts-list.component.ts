@@ -15,12 +15,16 @@ export class PostsListComponent implements OnInit {
 
   posts: Observable<Post[]> = of();
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>
+  ) {
   }
 
   ngOnInit(): void {
     this.posts = this.store.select(getPosts);
-    this.store.dispatch(loadPosts());
+    setTimeout(() => {
+      this.store.dispatch(loadPosts());
+    }, 0);
   }
 
   onDeletePost(id: string | undefined) {

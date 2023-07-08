@@ -11,13 +11,15 @@ import {
   updatePost,
   updatePostSuccess
 } from './posts.actions';
-import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
+import { catchError, exhaustMap, filter, map, mergeMap, of, switchMap, take } from 'rxjs';
 import { Post } from '../../models/posts.model';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AppState } from '../../state/app.state';
 import { setErrorMessage, setLoadingSpinner } from '../../store/shared/shared.actions';
 import { Router } from '@angular/router';
 import { GeneralService } from '../../services/general.service';
+import { ROUTER_NAVIGATION, RouterNavigatedAction } from '@ngrx/router-store';
+import { getPostById } from './posts.selector';
 
 @Injectable()
 export class PostsEffects {
@@ -26,8 +28,10 @@ export class PostsEffects {
     return this.actions$.pipe(
       ofType(loadPosts),
       mergeMap(() => {
+        this.store.dispatch(setLoadingSpinner({ status: true }));
         return this.postsService.getPosts().pipe(
           map((posts: Post[]) => {
+            this.store.dispatch(setLoadingSpinner({ status: false }));
             return loadPostsSuccess({ posts });
           })
         );
@@ -85,6 +89,42 @@ export class PostsEffects {
         return this.postsService.deletePost(action.id).pipe(
           map(() => {
             return deletePostSuccess({ id: action.id });
+          })
+        );
+      })
+    );
+  });
+
+  getSinglePost$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATION),
+      filter((r: RouterNavigatedAction) => {
+        return r.payload.routerState.url.startsWith('/posts/details');
+      }),
+      map((r: RouterNavigatedAction) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (r.payload.routerState as any)['params']['id'];
+      }),
+      switchMap((id) => {
+        console.log('came here');
+        return this.store.pipe(
+          take(1),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          select<AppState, any>(getPostById),
+          exhaustMap((post) => {
+            if (post) {
+              const postData = [ { ...post, id } ];
+              return of(loadPostsSuccess({ posts: postData }));
+            } else {
+              console.log('came here 2');
+              return this.postsService.getPostById(id)
+                .pipe(
+                  map((post) => {
+                    const postData = [ { ...post, id } ];
+                    return loadPostsSuccess({ posts: postData });
+                  })
+                );
+            }
           })
         );
       })
