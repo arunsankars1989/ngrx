@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { setErrorMessage, setLoadingSpinner } from '../../store/shared/shared.actions';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
+import { GeneralService } from '../../services/general.service';
 
 @Injectable()
 export class AuthEffects {
@@ -28,7 +29,7 @@ export class AuthEffects {
               return loginSuccess({ user, redirect: true });
             }),
             catchError((errResp) => {
-              const errorMessage: string = this.authService.getErrorMessage(errResp.error.error.message);
+              const errorMessage: string = this.generalService.getErrorMessage(errResp.error.error.message);
               this.store.dispatch(setLoadingSpinner({ status: false }));
               return of(setErrorMessage({ message: errorMessage }));
             })
@@ -63,7 +64,7 @@ export class AuthEffects {
               return signupSuccess({ user, redirect: true });
             }),
             catchError((errResp) => {
-              const errorMessage: string = this.authService.getErrorMessage(errResp.error.error.message);
+              const errorMessage: string = this.generalService.getErrorMessage(errResp.error.error.message);
               this.store.dispatch(setLoadingSpinner({ status: false }));
               return of(setErrorMessage({ message: errorMessage }));
             })
@@ -95,6 +96,7 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
+    private generalService: GeneralService,
     private store: Store<AppState>,
     private router: Router
   ) {

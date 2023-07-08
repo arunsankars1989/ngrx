@@ -20,7 +20,6 @@ export class AuthGuard {
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
-    console.log('came to canActivate');
     return this.store.select(isAuthenticated).pipe(
       map((authenticate) => {
         if (!authenticate) {
