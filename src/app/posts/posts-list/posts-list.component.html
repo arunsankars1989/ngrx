@@ -1,6 +1,6 @@
 <div class="row my-4">
   <div class="col-md-8">
-    <h3>{{ 'posts.title' | translate }}</h3>
+    <h3>{{ 'posts.title' | translate }}({{ count | async }})</h3>
     <div><a [routerLink]="['/posts/add']" class="btn btn-primary" href="#">{{ 'buttons.addPost' | translate }}</a></div>
     <table *ngIf="posts | async as postsData" class="table table-striped">
       <thead>

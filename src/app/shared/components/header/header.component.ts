@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../state/app.state';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { isAuthenticated } from '../../../auth/state/auth.selector';
 import { logout } from '../../../auth/state/auth.actions';
 
@@ -12,7 +12,7 @@ import { logout } from '../../../auth/state/auth.actions';
 })
 export class HeaderComponent implements OnInit {
 
-  isAuthenticated: Observable<boolean> = of();
+  isAuthenticated: Observable<boolean> = new Observable<boolean>();
 
   constructor(private store: Store<AppState>) {
   }

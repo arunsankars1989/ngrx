@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { getCounter } from '../state/counter.selectors';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AppState } from '../../state/app.state';
 
 @Component({
@@ -11,7 +11,7 @@ import { AppState } from '../../state/app.state';
 })
 export class CounterOutputComponent implements OnInit {
 
-  counter$: Observable<number> = of();
+  counter$: Observable<number> = new Observable<number>();
 
   constructor(private store: Store<AppState>) {
   }
