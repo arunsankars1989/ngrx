@@ -11,13 +11,17 @@ import {
   updatePost,
   updatePostSuccess
 } from './posts.actions';
-import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
+import { catchError, filter, map, mergeMap, of, switchMap, withLatestFrom } from 'rxjs';
 import { Post } from '../../models/posts.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../state/app.state';
 import { setErrorMessage, setLoadingSpinner } from '../../store/shared/shared.actions';
 import { Router } from '@angular/router';
 import { GeneralService } from '../../services/general.service';
+import { ROUTER_NAVIGATION, RouterNavigatedAction } from '@ngrx/router-store';
+import { getPosts } from './posts.selector';
+import { Update } from '@ngrx/entity';
+import { dummyAction } from '../../auth/state/auth.actions';
 
 @Injectable()
 export class PostsEffects {
@@ -25,12 +29,19 @@ export class PostsEffects {
   loadPosts$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadPosts),
-      mergeMap(() => {
-        return this.postsService.getPosts().pipe(
-          map((posts: Post[]) => {
-            return loadPostsSuccess({ posts });
-          })
-        );
+      withLatestFrom(this.store.select(getPosts)),
+      mergeMap(([ , posts ]) => {
+        if (!posts.length || posts.length === 1) {
+          this.store.dispatch(setLoadingSpinner({ status: true }));
+          return this.postsService.getPosts().pipe(
+            map((posts: Post[]) => {
+              this.store.dispatch(setLoadingSpinner({ status: false }));
+              return loadPostsSuccess({ posts });
+            })
+          );
+        }
+        this.store.dispatch(setLoadingSpinner({ status: false }));
+        return of(dummyAction());
       })
     );
   });
@@ -57,7 +68,13 @@ export class PostsEffects {
         this.store.dispatch(setLoadingSpinner({ status: false }));
         return this.postsService.updatePost(action.post)
           .pipe(map(() => {
-            return updatePostSuccess({ post: action.post });
+            const updatedPost: Update<Post> = {
+              id: action.post.id as string,
+              changes: {
+                ...action.post
+              }
+            };
+            return updatePostSuccess({ post: updatedPost });
           }),
           catchError((errResp) => {
             const errorMessage: string = this.generalService.getErrorMessage(errResp.error.error.message);
@@ -87,6 +104,34 @@ export class PostsEffects {
             return deletePostSuccess({ id: action.id });
           })
         );
+      })
+    );
+  });
+
+  getSinglePost$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATION),
+      filter((r: RouterNavigatedAction) => {
+        return r.payload.routerState.url.startsWith('/posts/details');
+      }),
+      map((r: RouterNavigatedAction) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (r.payload.routerState as any)['params']['id'];
+      }),
+      withLatestFrom(this.store.select(getPosts)),
+      switchMap(([ id, posts ]) => {
+        this.store.dispatch(setLoadingSpinner({ status: true }));
+        if (!posts.length) {
+          return this.postsService.getPostById(id).pipe(
+            map((post) => {
+              const postData = [ { ...post, id } ];
+              this.store.dispatch(setLoadingSpinner({ status: false }));
+              return loadPostsSuccess({ posts: postData });
+            })
+          );
+        }
+        this.store.dispatch(setLoadingSpinner({ status: false }));
+        return of(dummyAction());
       })
     );
   });

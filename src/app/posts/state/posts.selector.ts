@@ -1,20 +1,29 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { PostsState } from './posts.state';
+import { postsAdapter, PostsState } from './posts.state';
 import { getCurrentRoute } from '../../store/router/router.selector';
 import { RouterStateUrl } from '../../store/router/custom-serializer';
+import { Post } from '../../models/posts.model';
+import { Dictionary } from '@ngrx/entity';
 
 export const POST_STATE_NAME = 'posts';
 
 const getPostsState = createFeatureSelector<PostsState>(POST_STATE_NAME);
 
-export const getPosts = createSelector(getPostsState, state => {
-  return state.posts;
-});
+export const postsSelectors = postsAdapter.getSelectors();
+
+export const getPosts = createSelector(getPostsState, postsSelectors.selectAll);
+
+export const getPostEntities = createSelector(
+  getPostsState,
+  postsSelectors.selectEntities
+);
 
 export const getPostById = createSelector(
-  getPosts,
+  getPostEntities,
   getCurrentRoute,
-  (posts, route: RouterStateUrl) => {
+  (postEntities: Dictionary<Post>, route: RouterStateUrl) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return posts ? posts.find((post: any) => post.id === route.params['id']) : null;
+    return postEntities ? postEntities[route.params['id']] : null;
   });
+
+export const getCount = createSelector(getPostsState, (state) => state.count);

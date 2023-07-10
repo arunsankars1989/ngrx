@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import { getErrorMesssage, getLoading } from './store/shared/shared.selector';
@@ -14,8 +14,8 @@ import { autoLogin } from './auth/state/auth.actions';
 export class AppComponent implements OnInit {
 
   title = 'ngrx';
-  showLoading: Observable<boolean> = of();
-  errorMessage: Observable<string> = of();
+  showLoading: Observable<boolean> = new Observable<boolean>();
+  errorMessage: Observable<string> = new Observable<string>();
 
   constructor(
     private translate: TranslateService,

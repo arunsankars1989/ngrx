@@ -1,6 +1,6 @@
 <div class="row my-4">
   <div class="col-md-8">
-    <h3>{{ 'posts.title' | translate }}</h3>
+    <h3>{{ 'posts.title' | translate }}({{ count | async }})</h3>
     <div><a [routerLink]="['/posts/add']" class="btn btn-primary" href="#">{{ 'buttons.addPost' | translate }}</a></div>
     <table *ngIf="posts | async as postsData" class="table table-striped">
       <thead>
@@ -20,8 +20,15 @@
         <td>{{ post.title }}</td>
         <td>{{ post.description }}</td>
         <td>
-          <a [routerLink]="['edit', post.id]" class="btn btn-primary" href="#">{{ 'buttons.update' | translate }}</a>&nbsp;
-          <button (click)="onDeletePost(post.id)" class="btn btn-danger">{{ 'buttons.delete' | translate }}</button>
+          <div class="btn-group">
+            <a [routerLink]="['edit', post.id]" class="btn btn-primary btn-sm"
+               href="#">{{ 'buttons.update' | translate }}</a>
+            <button (click)="onDeletePost(post.id)"
+                    class="btn btn-danger btn-sm">{{ 'buttons.delete' | translate }}</button>
+            <a [routerLink]="['details', post.id]" class="btn btn-info btn-sm"
+               href="#">{{ 'buttons.details:' | translate }}</a>
+          </div>
+
         </td>
       </tr>
       </tbody>
