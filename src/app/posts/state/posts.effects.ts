@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 import { GeneralService } from '../../services/general.service';
 import { ROUTER_NAVIGATION, RouterNavigatedAction } from '@ngrx/router-store';
 import { getPostById } from './posts.selector';
+import { Update } from '@ngrx/entity';
 
 @Injectable()
 export class PostsEffects {
@@ -61,7 +62,13 @@ export class PostsEffects {
         this.store.dispatch(setLoadingSpinner({ status: false }));
         return this.postsService.updatePost(action.post)
           .pipe(map(() => {
-            return updatePostSuccess({ post: action.post });
+            const updatedPost: Update<Post> = {
+              id: action.post.id as string,
+              changes: {
+                ...action.post
+              }
+            };
+            return updatePostSuccess({ post: updatedPost });
           }),
           catchError((errResp) => {
             const errorMessage: string = this.generalService.getErrorMessage(errResp.error.error.message);
